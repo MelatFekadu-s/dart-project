@@ -1,0 +1,239 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const CampusTimesApp());
+}
+
+class CampusTimesApp extends StatelessWidget {
+  const CampusTimesApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Campus Times',
+      theme: ThemeData(
+        primaryColor: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFFF5F7FA),
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+// ---------------- HOME PAGE ----------------
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Campus Times 📰'),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+      ),
+      drawer: const AppDrawer(),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          newsCard(
+            context,
+            'Campus Festival 2026',
+            'Students celebrate with music and art.',
+            'https://picsum.photos/400/200?1',
+          ),
+          newsCard(
+            context,
+            'Tech Club Hackathon',
+            'Innovative projects showcased by students.',
+            'https://picsum.photos/400/200?2',
+          ),
+          newsCard(
+            context,
+            'Sports Day Highlights',
+            'Exciting matches and student victories.',
+            'https://picsum.photos/400/200?3',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget newsCard(BuildContext context, String title, String desc, String img) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailPage(title: title, imageUrl: img),
+          ),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        margin: const EdgeInsets.only(bottom: 16),
+        elevation: 3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              child: Image.network(img, height: 180, width: double.infinity, fit: BoxFit.cover),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 6),
+                  Text(desc, style: const TextStyle(color: Colors.black54)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- DETAIL PAGE ----------------
+class DetailPage extends StatelessWidget {
+  final String title;
+  final String imageUrl;
+
+  const DetailPage({super.key, required this.title, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('News Detail'),
+        backgroundColor: Colors.blue,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(imageUrl),
+            ),
+            const SizedBox(height: 16),
+            Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            const Text(
+              'This is a static article text for demonstration purposes. '
+              'Campus Times is a Flutter UI mini project designed to practice building multi-page apps with clean layouts and navigation.',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- CATEGORIES PAGE ----------------
+class CategoriesPage extends StatelessWidget {
+  const CategoriesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final categories = ['Technology 💻', 'Sports ⚽', 'Business 💼', 'Campus Life 🎓'];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Categories'),
+        backgroundColor: Colors.blue,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: ListTile(
+              title: Text(categories[index]),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ---------------- ABOUT PAGE ----------------
+class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('About App'),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.blue,
+                child: Icon(Icons.newspaper, size: 50, color: Colors.white),
+              ),
+              SizedBox(height: 16),
+              Text('Campus Times', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Text(
+                'Campus Times is a Flutter UI mini project focused on building a student-friendly news app interface. '
+                'It demonstrates Flutter layouts, navigation, and widget composition using static content.',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- DRAWER ----------------
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Colors.blue),
+            child: Center(
+              child: Text('Campus Times 📰', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+          ),
+          drawerItem(context, 'Home', Icons.home, const HomePage()),
+          drawerItem(context, 'Categories', Icons.category, const CategoriesPage()),
+          drawerItem(context, 'About', Icons.info, const AboutPage()),
+        ],
+      ),
+    );
+  }
+
+  Widget drawerItem(BuildContext context, String title, IconData icon, Widget page) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+      },
+    );
+  }
+}
